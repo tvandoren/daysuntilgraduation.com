@@ -9,16 +9,28 @@ function calculateTime() {
 
     let timeDifference = graduationDate.getTime() - currentDate.getTime()
 
-    let numDays = Math.floor(timeDifference / (1000 * 3600 * 24))
-    let remainder = timeDifference % (1000 * 3600 * 24)
+    let numDays = Math.floor(timeDifference / (1000 * 3600 * 24));
+    let remainder = timeDifference % (1000 * 3600 * 24);
 
-    let numHours = Math.floor(remainder / (1000 * 3600))
-    remainder = remainder % (1000 * 3600)
+    let numHours = Math.floor(remainder / (1000 * 3600));
+    remainder = remainder % (1000 * 3600);
 
-    let numMinutes = Math.floor(remainder / (1000 * 60))
-    remainder = remainder % (1000 * 60)
+    let numMinutes = Math.floor(remainder / (1000 * 60));
+    remainder = remainder % (1000 * 60);
 
-    let numSeconds = Math.floor(remainder / (1000))
+    let numSeconds = Math.floor(remainder / 1000);
 
-    document.getElementById("time-left").innerText = numDays + " days,\n" + numHours + " hours,\n" + numMinutes + " minutes,\n" + numSeconds + " seconds\n until I graduate!";
+    numDays = String(numDays);
+    numDays = numDays.length < 2 ? "0" + numDays : numDays;
+    numHours = String(numHours);
+    numHours = numHours.length < 2 ? "0" + numHours : numHours;
+    numMinutes = String(numMinutes);
+    numMinutes = numMinutes.length < 2 ? "0" + numMinutes : numMinutes;
+    numSeconds = String(numSeconds);
+    numSeconds = numSeconds.length < 2 ? "0" + numSeconds : numSeconds;
+
+    document.getElementById("days").innerText = numDays;
+    document.getElementById("hours").innerText = numHours;
+    document.getElementById("minutes").innerText = numMinutes;
+    document.getElementById("seconds").innerText = numSeconds;
 }
