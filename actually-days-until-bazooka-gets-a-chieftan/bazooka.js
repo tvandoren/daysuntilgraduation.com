@@ -1,14 +1,16 @@
 function updateTime() {
-  countInterval = setInterval(calculateTime, 1000);
+  setInterval(calculateTime, 1000);
 }
 
 function calculateTime() {
   let currentDate = new Date();
-  let graduationDate = new Date("05/01/2021");
+  let graduationDate = new Date("07/13/2020");
   graduationDate.setHours(12); // TODO: update once commencement time is released
 
-  let timeDifference = graduationDate.getTime() - currentDate.getTime();
+  let timeDifference = currentDate.getTime() - graduationDate.getTime();
 
+  console.log(" current " + currentDate.getTime())
+  console.log(" other " + graduationDate.getTime())
   let numDays = Math.floor(timeDifference / (1000 * 3600 * 24));
   let remainder = timeDifference % (1000 * 3600 * 24);
 
