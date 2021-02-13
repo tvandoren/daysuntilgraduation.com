@@ -36,6 +36,4 @@ function calculateTime() {
 }
 
 function storeGradDate() {
-  let test = window.prompt("Enter a name")
-  console.log(test)
 }
