@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: daysuntilgraduation.com
+Token: 97a298660fe1764c1ad754550e57a3c753a1da3fb6f1113d745c0946b8e1f6da
