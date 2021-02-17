@@ -1,39 +1,59 @@
-function updateTime() {
-  countInterval = setInterval(calculateTime, 1000);
+const { DateTime, Interval } = luxon;
+
+function getTimeToGraduation( // defaults to my graduation time
+  timeZone = "America/Chicago",
+  year = 2021,
+  month = 5,
+  day = 1,
+  hour = 12,
+  minute = 0
+) {
+  // set time for graduation start
+  let graduationTime = DateTime.fromObject({
+    zone: timeZone,
+    year: year,
+    month: month,
+    day: day,
+    hour: hour,
+    minute: minute,
+  });
+
+  // get current time in graduation timezone
+  let nowInGradTimezone = DateTime.fromObject({ zone: timeZone });
+
+  // return time difference as a luxon Interval object
+  updateCount(Interval.fromDateTimes(nowInGradTimezone, graduationTime));
+  return Interval.fromDateTimes(nowInGradTimezone, graduationTime);
 }
 
-function calculateTime() {
-  let currentDate = new Date();
-  let graduationDate = new Date("05/01/2021");
-  graduationDate.setHours(12); // TODO: update once commencement time is released
+function updateCount(intervalToGraduation) {
+  const UnitsOfTime = ["days", "hours", "minutes", "seconds"]; // element IDs and luxon time units
 
-  let timeDifference = graduationDate.getTime() - currentDate.getTime();
+  if (intervalToGraduation.isValid) {
+    // graduation has not happened yet
+    // convert Interval to luxon Duration for parsing time units
+    const timeToGraduation = intervalToGraduation.toDuration(UnitsOfTime);
 
-  let numDays = Math.floor(timeDifference / (1000 * 3600 * 24));
-  let remainder = timeDifference % (1000 * 3600 * 24);
+    UnitsOfTime.forEach((elemId) => {
+      let elemText = timeToGraduation[elemId]
+        .toString()
+        .split(".")[0] // only show whole seconds
+        .padStart(2, "0"); // keep at least two digits
 
-  let numHours = Math.floor(remainder / (1000 * 3600));
-  remainder = remainder % (1000 * 3600);
-
-  let numMinutes = Math.floor(remainder / (1000 * 60));
-  remainder = remainder % (1000 * 60);
-
-  let numSeconds = Math.floor(remainder / 1000);
-
-  numDays = String(numDays);
-  numDays = numDays.length < 2 ? "0" + numDays : numDays;
-  numHours = String(numHours);
-  numHours = numHours.length < 2 ? "0" + numHours : numHours;
-  numMinutes = String(numMinutes);
-  numMinutes = numMinutes.length < 2 ? "0" + numMinutes : numMinutes;
-  numSeconds = String(numSeconds);
-  numSeconds = numSeconds.length < 2 ? "0" + numSeconds : numSeconds;
-
-  document.getElementById("days").innerText = numDays;
-  document.getElementById("hours").innerText = numHours;
-  document.getElementById("minutes").innerText = numMinutes;
-  document.getElementById("seconds").innerText = numSeconds;
+      document.getElementById(elemId).innerText = elemText;
+    });
+  } else {
+    // graduation has happened
+    // TODO: update UI with something congratulatory
+  }
 }
 
-function storeGradDate() {
+function initialize() {
+  let interval = getTimeToGraduation(); // call with defaults
+
+  setInterval(function () {
+    updateCount(interval);
+  }, 1000);
 }
+
+function storeGradDate() {}
