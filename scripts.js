@@ -1,4 +1,4 @@
-const { DateTime, Interval } = luxon;
+const { DateTime, Duration, Interval } = luxon;
 
 function getTimeToGraduation( // defaults to my graduation time
   timeZone = "America/Chicago",
@@ -9,6 +9,7 @@ function getTimeToGraduation( // defaults to my graduation time
   minute = 0
 ) {
   // set time for graduation start
+  //let graduationTime = DateTime.local(2021, 5, 1, 12, 0);
   let graduationTime = DateTime.fromObject({
     zone: timeZone,
     year: year,
@@ -20,39 +21,38 @@ function getTimeToGraduation( // defaults to my graduation time
 
   // get current time in graduation timezone
   let nowInGradTimezone = DateTime.fromObject({ zone: timeZone });
+  console.log(`graduationTime ${graduationTime.toJSON()}`);
+  console.log(`nowTime: ${nowInGradTimezone.toJSON()}`);
 
-  // return time difference as a luxon Interval object
-  updateCount(Interval.fromDateTimes(nowInGradTimezone, graduationTime));
-  return Interval.fromDateTimes(nowInGradTimezone, graduationTime);
+  return graduationTime;
 }
 
-function updateCount(intervalToGraduation) {
+function updateCount(gradTime) {
   const UnitsOfTime = ["days", "hours", "minutes", "seconds"]; // element IDs and luxon time units
 
-  if (intervalToGraduation.isValid) {
-    // graduation has not happened yet
-    // convert Interval to luxon Duration for parsing time units
-    const timeToGraduation = intervalToGraduation.toDuration(UnitsOfTime);
+  // graduation has not happened yet
+  // convert Interval to luxon Duration for parsing time units
+  const timeToGraduation = Duration.fromMillis(
+    gradTime - DateTime.local()
+  ).shiftTo(...UnitsOfTime);
 
-    UnitsOfTime.forEach((elemId) => {
-      let elemText = timeToGraduation[elemId]
-        .toString()
-        .split(".")[0] // only show whole seconds
-        .padStart(2, "0"); // keep at least two digits
+  const didGraduateAlready = gradTime - DateTime.local() <= 0
 
-      document.getElementById(elemId).innerText = elemText;
-    });
-  } else {
-    // graduation has happened
-    // TODO: update UI with something congratulatory
-  }
+  UnitsOfTime.forEach((elemId) => {
+    let elemText = timeToGraduation[elemId]
+      .toString()
+      .split(".")[0] // only show whole seconds
+      .padStart(2, "0"); // keep at least two digits
+
+    document.getElementById(elemId).innerText = elemText;
+  });
 }
 
 function initialize() {
-  let interval = getTimeToGraduation(); // call with defaults
+  let gradTime = getTimeToGraduation(); // call with defaults
 
   setInterval(function () {
-    updateCount(interval);
+    updateCount(gradTime);
   }, 1000);
 }
 
