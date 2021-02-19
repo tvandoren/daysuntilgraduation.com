@@ -84,6 +84,9 @@ function setUserGrad() {
     // save date to local storage
     window.localStorage.setItem("userGrad", gradDate.value);
 
+    // set message default
+    document.getElementById("descriptor").innerText = "... until I graduate!";
+
     // update timer
     setTimer(DateTime.fromISO(gradDate.value));
 
