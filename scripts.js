@@ -87,6 +87,9 @@ function setUserGrad() {
     window.localStorage.setItem("userGrad", gradDate.value);
 
     // update timer
-    setTimer(DateTime.fromISO(gradDate));
+    setTimer(DateTime.fromISO(gradDate.value));
+
+    // close modal
+    document.getElementById("set-date-modal").style.display = "none";
   }
 }
