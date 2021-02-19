@@ -1,5 +1,5 @@
 // set up Luxon
-const { DateTime, Duration } = luxon;
+const { DateTime } = luxon;
 // give setInterval global scope
 let timerHandle;
 
@@ -40,6 +40,7 @@ function initialize() {
     minute: 0,
   });
 
+  // get grad date from local storage if present, otherwise use default
   let userDate = window.localStorage.getItem("userGrad");
   let gradDate;
   if (userDate !== null) {
@@ -48,7 +49,7 @@ function initialize() {
     gradDate = defaultGraduationTime;
   }
 
-  // call new function with grad date
+  // set timer with grad date
   setTimer(gradDate);
 
   // set up modal controls
@@ -78,11 +79,12 @@ function setTimer(gradDate) {
 }
 
 function setUserGrad() {
-  let gradDate = document.getElementById("grad-time").value;
+  let gradDate = document.getElementById("grad-time");
 
-  if (gradDate) {
+  // reportValidity() uses build in form controls to alert user if the date isn't filled in
+  if (gradDate.reportValidity()) {
     // save date to local storage
-    window.localStorage.setItem("userGrad", gradDate);
+    window.localStorage.setItem("userGrad", gradDate.value);
 
     // update timer
     setTimer(DateTime.fromISO(gradDate));
