@@ -38,11 +38,33 @@
       </div>
     </main>
     <footer class="bottom-nav">
-      <a onclick="storeGradDate()" href="#">SET DATE</a>
+      <a id="open-modal" href="#">SET DATE</a>
       <a href="https://github.com/SoriTru/daysuntilgraduation.com" target="_"
         >GITHUB</a
       >
       <a href="https://trevorvandoren.com" target="_">ME</a>
     </footer>
+    <div id="set-date-modal" class="modal">
+      <div class="modal-content">
+        <form>
+          <label for="grad-time">Set graduation date & time:</label>
+          <br />
+          <input
+            type="datetime-local"
+            id="grad-time"
+            name="grad-time"
+            required
+          />
+          <br />
+          <button
+            id="set-date-button"
+            class="submit-button"
+            onclick="setUserGrad()"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
   </body>
 </html>
