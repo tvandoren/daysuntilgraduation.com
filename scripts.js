@@ -1,7 +1,5 @@
 // set up Luxon
 const { DateTime } = luxon;
-// give setInterval global scope
-let timerHandle;
 
 function updateCount(gradTime) {
   const UnitsOfTime = ["days", "hours", "minutes", "seconds"]; // element IDs and luxon time units
@@ -19,7 +17,7 @@ function updateCount(gradTime) {
     });
   } else {
     // graduation has happened, so set timer to 0 and clear interval
-    clearInterval(timerHandle);
+    setTimer(null);
     UnitsOfTime.forEach((elemId) => {
       document.getElementById(elemId).innerText = "00";
     });
@@ -30,30 +28,28 @@ function updateCount(gradTime) {
 }
 
 function initialize() {
-  // set up counter
-  let defaultGraduationTime = DateTime.fromObject({
-    zone: "America/Chicago",
-    year: 2021,
-    month: 5,
-    day: 1,
-    hour: 12,
-    minute: 0,
-  });
+  // get grad date from local storage if present
+  const userDate = window.localStorage.getItem("userGrad");
 
-  // get grad date from local storage if present, otherwise use default
-  let userDate = window.localStorage.getItem("userGrad");
-  let gradDate;
   if (userDate !== null) {
-    gradDate = DateTime.fromISO(userDate);
+    // count down to user-provided date
+    setTimer(DateTime.fromISO(userDate));
   } else {
-    gradDate = defaultGraduationTime;
+    // count down to default date
+    setTimer(
+      DateTime.fromObject({
+        zone: "America/Chicago",
+        year: 2021,
+        month: 5,
+        day: 1,
+        hour: 12,
+        minute: 0,
+      })
+    );
   }
 
-  // set timer with grad date
-  setTimer(gradDate);
-
   // set up modal controls
-  let dateModal = document.getElementById("set-date-modal");
+  const dateModal = document.getElementById("set-date-modal");
   // open modal
   document.getElementById("open-modal").onclick = () => {
     dateModal.style.display = "flex";
@@ -67,21 +63,23 @@ function initialize() {
 }
 
 function setTimer(gradDate) {
-  // clear timer handle if it's set
-  if (timerHandle !== null) {
-    clearInterval(timerHandle);
+  // clear timer handle if it's set or if no date is given
+  if (this.timerHandle != null || gradDate == null) {
+    clearInterval(this.timerHandle);
   }
 
   // set timer with new date
-  timerHandle = setInterval(() => {
-    updateCount(gradDate);
-  }, 1000);
+  if (gradDate != null) {
+    this.timerHandle = setInterval(() => {
+      updateCount(gradDate);
+    }, 1000);
+  }
 }
 
 function setUserGrad() {
   let gradDate = document.getElementById("grad-time");
 
-  // reportValidity() uses build in form controls to alert user if the date isn't filled in
+  // reportValidity() uses built-in form controls to alert user if the date isn't filled in
   if (gradDate.reportValidity()) {
     // save date to local storage
     window.localStorage.setItem("userGrad", gradDate.value);
