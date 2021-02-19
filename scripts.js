@@ -23,8 +23,9 @@ function updateCount(gradTime) {
     UnitsOfTime.forEach((elemId) => {
       document.getElementById(elemId).innerText = "00";
     });
-    // TODO: update UI with something congratulatory
-    console.log("congratulations");
+    // update message
+    document.getElementById("descriptor").innerText =
+      "Congratulations, you've graduated!";
   }
 }
 
