@@ -35,11 +35,11 @@ function initialize() {
     // count down to user-provided date
     setTimer(DateTime.fromISO(userDate));
   } else {
-    // count down to default date (UT Tyler Soules COB graduation Spring 2021)
+    // count down to default date (UT Tyler Soules COB graduation Spring 2022)
     setTimer(
       DateTime.fromObject({
         zone: "America/Chicago",
-        year: 2021,
+        year: 2022,
         month: 5,
         day: 1,
         hour: 18,
